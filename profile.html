@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Hero Digital</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">Hero Digital</a>
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="index.html#hero">Home</a></li>
+                        <li><a href="index.html#products">Products</a></li>
+                        <li><a href="index.html#categories">Categories</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <div id="auth-buttons"></div>
+                    <button id="cart-toggle" class="cart-icon" type="button">
+                        Cart
+                        <span id="cart-count" class="cart-count" style="display:none;">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="products-section">
+        <div class="container">
+            <h1 class="section-title">My Profile</h1>
+            <div id="profile-message" class="mb-2"></div>
+
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-info">
+                        <h2 class="product-title">Account Details</h2>
+                        <form id="profile-form">
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" id="profile-email" class="form-input" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Username</label>
+                                <input type="text" id="profile-username" class="form-input" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">First Name</label>
+                                <input type="text" id="profile-firstname" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" id="profile-lastname" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone</label>
+                                <input type="text" id="profile-phone" class="form-input">
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2">Update Profile</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-info">
+                        <h2 class="product-title">Change Password</h2>
+                        <form id="password-form">
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" id="current-password" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">New Password</label>
+                                <input type="password" id="new-password" class="form-input" required>
+                            </div>
+                            <button type="submit" class="btn btn-secondary mt-2">Update Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="products-section">
+        <div class="container text-center">
+            <p class="mb-1">&copy; Hero Digital. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/script.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('api/auth.php?action=profile')
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                var msg = document.getElementById('profile-message');
+                if (!data.success) {
+                    msg.innerHTML = '<div class="alert alert-error">' + (data.message || 'Please login to view your profile.') + '</div>';
+                    setTimeout(function () { window.location.href = 'index.html'; }, 2000);
+                    return;
+                }
+                var p = data.profile;
+                document.getElementById('profile-email').value = p.email;
+                document.getElementById('profile-username').value = p.username;
+                document.getElementById('profile-firstname').value = p.first_name || '';
+                document.getElementById('profile-lastname').value = p.last_name || '';
+                document.getElementById('profile-phone').value = p.phone || '';
+            })
+            .catch(function () {
+                var msg = document.getElementById('profile-message');
+                msg.innerHTML = '<div class="alert alert-error">Failed to load profile.</div>';
+            });
+
+        var profileForm = document.getElementById('profile-form');
+        profileForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var payload = {
+                first_name: document.getElementById('profile-firstname').value,
+                last_name: document.getElementById('profile-lastname').value,
+                phone: document.getElementById('profile-phone').value
+            };
+            fetch('api/auth.php?action=profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        showAlert('Profile updated successfully', 'success');
+                    } else {
+                        showAlert(data.message || 'Failed to update profile', 'error');
+                    }
+                })
+                .catch(function () { showAlert('Failed to update profile', 'error'); });
+        });
+
+        var passwordForm = document.getElementById('password-form');
+        passwordForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var payload = {
+                current_password: document.getElementById('current-password').value,
+                new_password: document.getElementById('new-password').value
+            };
+            fetch('api/auth.php?action=change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        showAlert('Password updated successfully', 'success');
+                        document.getElementById('current-password').value = '';
+                        document.getElementById('new-password').value = '';
+                    } else {
+                        showAlert(data.message || 'Failed to update password', 'error');
+                    }
+                })
+                .catch(function () { showAlert('Failed to update password', 'error'); });
+        });
+    });
+    </script>
+</body>
+</html>

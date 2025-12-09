@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Digital - Premium Digital Products</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">Hero Digital</a>
+
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#categories">Categories</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+
+                <div class="header-actions">
+                    <div id="auth-buttons">
+                        <button class="btn btn-primary" onclick="showLoginModal()">Login</button>
+                        <button class="btn btn-secondary" onclick="showRegisterModal()">Register</button>
+                    </div>
+
+                    <button id="cart-toggle" class="cart-icon" type="button">
+                        Cart
+                        <span id="cart-count" class="cart-count" style="display: none;">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="container">
+            <h1>Premium Digital Products for Modern Businesses</h1>
+            <p>Discover software, templates, courses, and assets to grow your brand and accelerate your digital journey.</p>
+            <a href="#products" class="btn btn-secondary">Browse Products</a>
+        </div>
+    </section>
+
+    <main>
+        <!-- Optional user info area updated by JS when logged in -->
+        <section class="mt-2">
+            <div class="container" id="user-info"></div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="products-section">
+            <div class="container">
+                <h2 class="section-title">Find the perfect product</h2>
+                <form id="search-form" class="mb-2">
+                    <div class="form-group">
+                        <label for="search-input" class="form-label">Search</label>
+                        <input type="text" id="search-input" class="form-input" placeholder="Search digital products (e.g. CRM, template, course)">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+                <div id="search-results" class="products-grid mt-2"></div>
+            </div>
+        </section>
+
+        <!-- Featured Products -->
+        <section id="products" class="products-section">
+            <div class="container">
+                <h2 class="section-title">Featured Digital Products</h2>
+                <div id="featured-products" class="products-grid"></div>
+            </div>
+        </section>
+
+        <!-- Categories (static cards) -->
+        <section id="categories" class="products-section">
+            <div class="container">
+                <h2 class="section-title">Browse by Category</h2>
+                <div class="products-grid">
+                    <div class="product-card">
+                        <div class="product-info">
+                            <h3 class="product-title">Software</h3>
+                            <p class="product-description">Business and productivity software, tools, and platforms.</p>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-info">
+                            <h3 class="product-title">E-books</h3>
+                            <p class="product-description">In-depth guides and playbooks from industry experts.</p>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-info">
+                            <h3 class="product-title">Templates</h3>
+                            <p class="product-description">Website, design, and document templates ready to use.</p>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-info">
+                            <h3 class="product-title">Courses</h3>
+                            <p class="product-description">Video and online courses to upskill your team.</p>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-info">
+                            <h3 class="product-title">Graphics</h3>
+                            <p class="product-description">Logos, icons, illustrations, and creative assets.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pagination container used by JS when listing many products -->
+        <section class="products-section">
+            <div class="container text-center">
+                <div id="pagination"></div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="products-section">
+            <div class="container">
+                <h2 class="section-title">About Hero Digital</h2>
+                <p class="mb-2">
+                    Hero Digital is your one-stop shop for premium digital products. We carefully curate
+                    software, templates, courses, and creative assets to help entrepreneurs, agencies,
+                    and small businesses launch and grow faster.
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="products-section">
+            <div class="container">
+                <h2 class="section-title">Contact</h2>
+                <p class="mb-2">Have questions or need a custom solution? Reach out to us:</p>
+                <p>Email: <a href="mailto:info@herodigital.com">info@herodigital.com</a></p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <aside id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-modal" type="button" onclick="toggleCart()">&times;</button>
+        </div>
+        <div id="cart-items" class="cart-items"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <button class="checkout-btn" type="button" onclick="showAlert('Checkout flow not implemented yet.', 'info')">Proceed to Checkout</button>
+        </div>
+    </aside>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Login</h3>
+                <button class="close-modal" type="button" onclick="closeModal('login-modal')">&times;</button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email" class="form-label">Email</label>
+                    <input type="email" id="login-email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password" class="form-label">Password</label>
+                    <input type="password" id="login-password" class="form-input" required>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create an Account</h3>
+                <button class="close-modal" type="button" onclick="closeModal('register-modal')">&times;</button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-username" class="form-label">Username</label>
+                    <input type="text" id="register-username" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email" class="form-label">Email</label>
+                    <input type="email" id="register-email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password" class="form-label">Password</label>
+                    <input type="password" id="register-password" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-firstname" class="form-label">First Name</label>
+                    <input type="text" id="register-firstname" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="register-lastname" class="form-label">Last Name</label>
+                    <input type="text" id="register-lastname" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="register-phone" class="form-label">Phone</label>
+                    <input type="text" id="register-phone" class="form-input">
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="products-section">
+        <div class="container text-center">
+            <p class="mb-1">&copy; Hero Digital. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
